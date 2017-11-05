@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" id="app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
+</head>
+<body>
+<h1 class="title">{{title}}</h1>
+<h2 class="subtitle">{{ status }}</h2>
+<nav class="navbar is-primary" role="navigation" aria-label="dropdown navigation">
+    <div class="navbar-item">
+        <a v-for="menu in menus" class="navbar-item " @click.prevent="showView(menu.id)">
+            {{ menu.name }}
+        </a>
+    </div>
+</nav>
+<div class="box" v-if="activedView == 0">
+    <table class="table is-striped is-narrow ">
+        <thead>
+        <tr>
+            <th style="width: 10px">#</th>
+            <th style="width: 70px">Vencimento</th>
+            <th style="width: 170px">Nome</th>
+            <th style="width: 170px">Valor</th>
+            <th style="width: 10px">Paga</th>
+            <th style="width: 70px">Acoes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(index,bill) in bills" v-bind:class="{'is-selected': bill.done, '': !bill.done}">
+            <td>{{ index + 1}}</td>
+            <td>{{ bill.date_due}}</td>
+            <td>{{ bill.name}}</td>
+            <td>{{ bill.value | currency 'R$ ' 2 }}</td>
+            <td><i class="icon fa fa-check-circle-o fa-fw has-text-success" v-if="bill.done == 1"></i>
+                <i class="icon fa fa-times-circle-o fa-fw has-text-danger" v-else></i>
+            </td>
+            <td>
+                <a href="#" @click.prevent="loadBill(bill)">
+                    <i class="icon fa fa-pencil fa-fw has-text-info"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="box" v-if="activedView == 1">
+    <form class="control" @submit.prevent="submit">
+        <label class="label">Vencimento</label>
+        <input type="text"
+               placeholder="Data Vcto"
+               class="input"
+               v-model="bill.date_due">
+        <label class="label">Nome</label>
+        <select v-model="bill.name" class="select" style="width: 100%">
+            <option v-for="opt in names" v-bind:value="opt">
+                {{ opt }}
+            </option>
+        </select>
+        <label class="label">Valor</label>
+        <input type="text"
+               placeholder="Valor"
+               class="input"
+               v-model="bill.value">
+        <hr>
+        <input type="submit" value="Enviar"
+               class="button is-samll is-link is-outlined is-right">
+    </form>
+</div>
+<script type="text/javascript" src="node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript" src="app.js"></script>
+</body>
+</html>
